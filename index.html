@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Frontend Arena</title>
+<style>
+:root{--bg:#06080f;--card:#0f1626;--line:#1e2b47;--tx:#e8edf7;--mut:#8593b3;--g:#39ff88;--r:#ff3b5c;--c:#22d3ee;--y:#ffd23f;--p:#a855f7;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{background:radial-gradient(900px 500px at 80% -10%,#1a1040 0,transparent 60%),radial-gradient(700px 400px at 0 100%,#062b3a 0,transparent 60%),var(--bg);color:var(--tx);font-family:"Segoe UI",system-ui,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+#app{max-width:520px;margin:0 auto;padding:14px;min-height:100vh}.big #app{max-width:900px}
+h1{font-size:32px;margin:6px 0;letter-spacing:2px;text-align:center;font-family:Consolas,monospace;background:linear-gradient(90deg,var(--c),var(--g),var(--p));-webkit-background-clip:text;background-clip:text;color:transparent;animation:gl 3s infinite}
+@keyframes gl{0%,92%,100%{transform:none}94%{transform:translateX(3px) skewX(6deg)}96%{transform:translateX(-3px)}}
+.sub{text-align:center;color:var(--mut);margin-bottom:14px;line-height:1.6}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}
+input,select,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:#0a1020;color:var(--tx);font-size:17px;margin:6px 0;font-family:inherit}
+textarea{min-height:150px;line-height:1.5}
+.btn{width:100%;padding:14px;border:0;border-radius:12px;font-size:18px;font-weight:700;color:#04110a;background:linear-gradient(90deg,var(--g),var(--c));cursor:pointer;font-family:inherit}
+.btn.alt{background:transparent;color:var(--c);border:1px solid var(--c)}.btn.red{background:linear-gradient(90deg,var(--r),#ff7a3b);color:#fff}.btn:disabled{opacity:.4}
+.avs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.av{font-size:28px;padding:6px 9px;border-radius:12px;border:2px solid var(--line);cursor:pointer}.av.on{border-color:var(--g);box-shadow:0 0 12px var(--g)}
+.hud{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.chip{padding:6px 10px;border-radius:20px;border:1px solid var(--line);background:#0a1020;font-weight:700;font-size:15px;white-space:nowrap;color:var(--tx);font-family:inherit}
+.sc{color:var(--y);font-family:Consolas,monospace;font-size:22px;font-weight:800}
+.bar{height:8px;border-radius:6px;background:#0a1020;overflow:hidden;margin:10px 0}.bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--g),var(--y),var(--r))}
+.q{font-size:20px;line-height:1.5;font-weight:600;margin:12px 0}
+.ans{display:block;width:100%;text-align:left;padding:14px;margin:8px 0;border-radius:12px;border:1px solid var(--line);background:#0a1020;color:var(--tx);font-size:17px;cursor:pointer;font-family:inherit}.ans:active{transform:scale(.98)}
+.ans.ok{background:#0d4a2a;border-color:var(--g)}.ans.bad{background:#521222;border-color:var(--r)}
+.lvl{font-family:Consolas,monospace;color:var(--p);font-weight:800;letter-spacing:1px}
+.row{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:#0a1020;margin:6px 0;border:1px solid transparent}.row.me{border-color:var(--c)}.row b{flex:1}.row .n{width:26px;color:var(--mut);font-family:Consolas,monospace}.row .s{font-family:Consolas,monospace;color:var(--y);font-weight:800}.row small{color:var(--mut)}
+.hk{padding:7px 12px;border-radius:10px;border:0;background:var(--r);color:#fff;font-weight:800;font-family:inherit}
+.feed{font-size:14px;color:var(--mut);min-height:20px}.feed div{padding:3px 0}.feed .x{color:var(--r)}.feed .b{color:var(--y)}
+.ov{position:fixed;inset:0;background:rgba(3,5,10,.94);z-index:20;overflow:auto;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px))}
+.fl{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;text-align:center;font-size:30px;font-weight:900;padding:30px;pointer-events:none;animation:fl 2.2s forwards}
+.fl.r{background:rgba(255,30,70,.88)}.fl.g{background:rgba(20,200,110,.85);color:#031}.fl.y{background:rgba(255,200,40,.88);color:#221}
+@keyframes fl{0%{opacity:0;transform:scale(1.2)}10%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
+.shake{animation:sh .4s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.code{font-family:Consolas,monospace;font-size:64px;letter-spacing:10px;text-align:center;color:var(--g)}
+.pl{display:inline-block;margin:4px;padding:8px 12px;border-radius:20px;background:#0a1020;border:1px solid var(--line)}
+.tag{color:var(--y);font-weight:800}.err{color:var(--r);text-align:center;min-height:22px}
+.ex{color:var(--c);font-size:15px;line-height:1.5;margin-top:8px}.kw{display:inline-block;margin:3px;padding:3px 9px;border-radius:12px;font-size:13px}.kw.y{background:#0d4a2a;color:var(--g)}.kw.n{background:#3a0e1b;color:#ff8da2}
+.mdl{background:#060b16;border-radius:8px;padding:10px;font-size:14px;line-height:1.5;white-space:pre-wrap;margin-top:8px}
+.rv{border-left:5px solid var(--line);padding:8px 10px;margin:8px 0;background:#0a1020;border-radius:8px;font-size:14px}.rv.ok{border-color:var(--g)}.rv.no{border-color:var(--r)}
+</style></head><body><div id="app"></div>
+<script>
+// ===== QUESTION BANK (from the Frontend lesson) =====
+const LV=["","RECRUIT","HACKER","CONQUEROR","BOSS FIGHT"],AVS=["🥷","🦅","🐺","🦂","👾","🤖","🐉","🦈"];
+const MC=[ // [question, options, correctIndex, explanation]
+["Which technology defines the structure (skeleton) of a web page?",["CSS","HTML","JavaScript","SQL"],1,"HTML builds the structure: headings, paragraphs, images and links. It is the frame of the building."],
+["Which technology specifies the appearance of a web page (colors, layout, size, fonts)?",["HTML","JavaScript","CSS","JSON"],2,"CSS controls the look. It is the interior and exterior design of the building."],
+["Which technology adds behavior and interactivity, such as updating part of the screen when a button is pressed?",["HTML","CSS","SQL","JavaScript"],3,"JavaScript is the behavior: the electrical and plumbing systems of the building."],
+["A Sign Up button is red with rounded borders and shows a pop-up message when clicked. Which technology makes the red color and rounded borders?",["HTML","CSS","JavaScript","Next.js"],1,"Colors and borders are appearance, so CSS. The pop-up is JavaScript and the button text is HTML."],
+["Which is NOT an appropriate benefit of using semantic HTML?",["Screen reader software can understand the page structure","Search engines can understand the content more easily","The display speed of the page necessarily becomes faster","Information is easier to convey to users with visual impairments"],2,"Semantic HTML improves accessibility and SEO, but it does not necessarily make a page load faster."],
+["The HTML element <nav> is used for:",["Displaying the main content","Navigation between parts of the website","Displaying the main heading","Displaying the footer"],1,"<nav> marks the navigation links. <main> is the main content and <footer> is the bottom of the page."],
+["Responsive design is a design concept in which the layout:",["Is fixed for PCs only","Adds behavior to buttons","Is automatically adjusted according to different screen sizes","Is stored in a database"],2,"One page that adapts to PCs, smartphones and tablets."],
+["Why is responsive design needed?",["To improve the display speed of websites","Because websites are accessed from various devices such as PCs, smartphones and tablets","To raise rankings in search engines","To add behavior to web pages"],1,"Keyword: different devices = responsive. Speed is performance, rankings are SEO, behavior is JavaScript."],
+["The term mobile-first in responsive design means:",["Designing the page first for computers","Designing the page first for small screens such as smartphones","Using JavaScript to add interactivity","Improving server speed"],1,"Mobile-first prioritizes small screens from the design stage because most traffic comes from smartphones."],
+["Which framework is built on top of React and adds routing and faster page display?",["Vue","Next.js","HTML","CSS"],1,"Next.js (by Vercel) includes React's features plus mechanisms to speed up page display."]
+];
+const ES=[ // essays: [prompt, keywords[[label,regex]], model answer]
+["Explain how HTML, CSS and JavaScript work together to build a complete web page.",[["HTML = structure","html.*(structure|skeleton|frame|elements|headings)|(structure|skeleton|frame).*html"],["CSS = appearance","css.*(appearance|style|styling|color|layout|font|design)|(appearance|style|colors?|layout).*css"],["JavaScript = behavior","(javascript|\\bjs\\b).*(behavio|interact|click|button|update|dynamic|respon)|(behavio|interact).*(javascript|\\bjs\\b)"],["Work together","together|combin|all three|each has|cooperat|collaborat"],["Example","button|sign.?up|menu|counter|search|click"]],"HTML defines the structure of the page (headings, paragraphs, images, links) like the frame of a building. CSS specifies the appearance (colors, layout, size, fonts) like the interior and exterior design. JavaScript adds behavior and interactivity (a button responding, part of the screen updating) like the electrical and plumbing systems. A web page is created by using all three in combination."],
+["What is a framework and why do developers use it? Mention two frameworks and what each is used for.",[["Definition: ready-made functions/components","function|component|structure|ready|pre.?built|provide"],["Not writing code from scratch","scratch|from zero|repeat|reuse"],["More efficient / faster development","efficien|faster|quick|save|time"],["React","react"],["Vue","\\bvue"],["Next.js","next"]],"A framework is a structure that provides commonly used functions and components in advance, to make web application development more efficient. Developers do not need to write all the code from scratch. Examples: React (developed by Meta) efficiently updates only the parts of the UI that change and suits large-scale apps. Vue has a simple structure and lets you build an app incrementally from small features. Next.js is built on React and adds routing and faster page display."]
+];
+const TOTAL=MC.length+ES.length,QT=20,ET=150,EMAX=250;
+// ===== helpers =====
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const lvOf=i=>i<4?1:i<8?2:i<10?3:4;
+let ready=false,off=0,N=()=>Date.now()+off,peer=null,conn=null,conns=[],synced=false,HP="frontendarena-v1-",scr="home",code="",isHost=false,room={},players={},hacks=[],hist=[],
+me={id:"p"+Math.random().toString(36).slice(2,9),n:"",av:AVS[0],pts:0,st:0,hk:0,sh:0,qi:0,dn:0},cur=null,t0=0,locked=false,lastLvl=0,seenH=new Set(),ticker=null,err="Loading…",wTimer=null;
+try{const s=localStorage.getItem("fa_name");if(s)me.n=s}catch(e){}
+(function(){const U=["https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js","https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js","https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"];let i=0;
+function ld(){if(typeof Peer!=="undefined"){ready=true;err="";if(scr==="home")render();return}
+if(i>=U.length){err="Could not load the connection library. Try mobile data and refresh.";if(scr==="home")render();return}
+const e=document.createElement("script");e.src=U[i++];e.onload=ld;e.onerror=ld;document.head.appendChild(e)}ld()})();
+function calc(){const S={};for(const id in players){const p=players[id];S[id]={id,n:p.n,av:p.av,qi:p.qi||0,dn:p.dn,sc:p.pts||0,hl:p.hk||0,sl:p.sh||0}}
+for(const h of hacks){if(S[h.from])S[h.from].hl--;if(h.blk){if(S[h.to])S[h.to].sl--}else{if(S[h.from])S[h.from].sc+=h.amt;if(S[h.to])S[h.to].sc-=h.amt}}
+return Object.values(S).map(x=>({...x,sc:Math.max(0,x.sc),hl:Math.max(0,x.hl),sl:Math.max(0,x.sl)})).sort((a,b)=>b.sc-a.sc)}
+function feedHtml(){return hacks.slice().sort((a,b)=>b.t-a.t).slice(0,isHost?7:3).map(h=>h.blk?`<div class="b">🛡 ${esc(h.tn)} blocked ${esc(h.fn)}’s hack</div>`:`<div class="x">🔓 ${esc(h.fn)} hacked ${esc(h.tn)} and stole <b>${h.amt}</b> pts</div>`).join("")||"<div>No hacks yet… 👀</div>"}
+function lbHtml(n,hackable){const L=calc(),m=L.find(x=>x.id===me.id);return L.slice(0,n||50).map((p,i)=>`<div class="row ${p.id===me.id?"me":""}"><span class="n">${i+1}</span><span style="font-size:24px">${p.av}</span><b>${esc(p.n)} ${p.sl>0?"🛡":""}<br><small>${p.dn?"✅ finished":"Q"+Math.min(p.qi+1,TOTAL)+"/"+TOTAL}</small></b><span class="s">${p.sc}</span>${hackable&&p.id!==me.id?`<button class="hk" data-h="${p.id}" ${m&&m.hl>0?"":"disabled style=opacity:.35"}>🔓 HACK</button>`:""}</div>`).join("")}
+function render(){const A=$("#app");document.body.classList.toggle("big",isHost);
+if(scr==="home"){A.innerHTML=`<h1>FRONTEND ARENA</h1><div class="sub">HTML • CSS • JavaScript • Semantic • Responsive • Frameworks<br>10 quick questions + 2 boss essays ⚔️</div>
+<div class="card"><div class="avs">${AVS.map(a=>`<span class="av ${a===me.av?"on":""}" data-a="${a}">${a}</span>`).join("")}</div>
+<input id="nm" maxlength="14" placeholder="Your player name" value="${esc(me.n)}"><input id="cd" inputmode="numeric" maxlength="4" placeholder="Room code (4 digits)" style="text-align:center;letter-spacing:6px">
+<div class="err" id="er">${esc(err)}</div><button class="btn" id="jn" ${ready?"":"disabled"}>⚔️ JOIN THE BATTLE</button></div>
+<button class="btn alt" id="ho" ${ready?"":"disabled"}>🎙 I am the teacher — create a room</button>
+<div class="card sub">Correct answer = points + speed bonus • 3 correct in a row = 🔓 Hack: steal 25% of any player’s score • 4 in a row = 🛡 shield • Beat the boss essays for up to 250 pts each</div>`;
+document.querySelectorAll(".av").forEach(e=>e.onclick=()=>{me.av=e.dataset.a;document.querySelectorAll(".av").forEach(x=>x.classList.toggle("on",x===e))});
+$("#jn").onclick=join;$("#ho").onclick=host}
+else if(scr==="lobby"){A.innerHTML=isHost?`<h1>FRONTEND ARENA</h1><div class="sub">Room code — students open the same link and enter it</div><div class="code">${code}</div>
+<div class="card"><div class="sub">Time limit</div><select id="du"><option value="8">8 minutes</option><option value="12" selected>12 minutes</option><option value="18">18 minutes</option></select>
+<div id="pl"></div><button class="btn" id="st">🚀 START THE BATTLE</button></div>`:`<h1>FRONTEND ARENA</h1><div class="code">${code}</div><div class="sub">Waiting for the teacher to start… get ready 😎</div><div class="card" id="pl"></div>`;
+if(isHost)$("#st").onclick=()=>hostSet({status:"playing",endAt:Date.now()+(+$("#du").value)*60000})}
+else if(scr==="play"&&isHost){A.innerHTML=`<h1>LIVE ARENA</h1><div class="hud"><span class="chip" id="clk"></span><button class="btn red" id="en" style="width:auto;padding:8px 16px;font-size:15px">⛔ End now</button></div><div class="card" id="lb"></div><div class="card feed" id="fd" style="font-size:18px"></div>`;
+$("#en").onclick=()=>hostSet({status:"ended"})}
+else if(scr==="play"){A.innerHTML=`<div class="hud"><span class="chip">${me.av} ${esc(me.n)}</span><span class="sc" id="msc">0</span><button class="chip" id="hkb" style="color:var(--r)">🔓 <span id="mhk">0</span></button><span class="chip">🛡 <span id="msh">0</span></span></div>
+<div class="hud" style="margin-top:8px"><span class="lvl" id="lv"></span><span class="chip" id="pg"></span><span class="chip" id="rk"></span></div><div class="bar"><i id="tb"></i></div><div class="card" id="qa"></div><div class="feed" id="fd"></div><button class="btn alt" id="lbb">🏆 Leaderboard</button>`;
+$("#hkb").onclick=()=>openLB(true);$("#lbb").onclick=()=>openLB(false)}
+else if(scr==="wait"){A.innerHTML=`<h1>🏁 YOU FINISHED!</h1><div class="sub">Final heist time — use your 🔓 hacks before the game ends!<br>The game ends when everyone finishes or the teacher ends it.</div>
+<div class="hud"><span class="sc" id="msc">0</span><span class="chip">🔓 <span id="mhk">0</span></span><span class="chip">🛡 <span id="msh">0</span></span></div><div class="card" id="ol"></div><div class="card feed" id="fd"></div>`}
+else if(scr==="end"){const L=calc(),i=L.findIndex(x=>x.id===me.id);A.innerHTML=`<h1>GAME OVER</h1><div class="sub">${isHost?"Final standings":i>=0?`You placed <span class="tag">#${i+1}</span> with ${L[i].sc} points`:""}</div><div class="card">${L.slice(0,3).map((p,k)=>`<div class="row"><span style="font-size:30px">${["🥇","🥈","🥉"][k]}</span><span style="font-size:26px">${p.av}</span><b>${esc(p.n)}</b><span class="s">${p.sc}</span></div>`).join("")}</div><div class="card">${lbHtml(30)}</div>
+${!isHost&&hist.length?`<div class="card"><b>📝 Your answers</b>${hist.map(h=>h.e?`<div class="rv"><b>Essay:</b> ${esc(h.q)}<div class="mdl">${esc(h.m)}</div></div>`:`<div class="rv ${h.ok?"ok":"no"}">${h.ok?"✅":"❌"} ${esc(h.q)}<br><small>Correct: ${esc(h.c)}</small><div class="ex">💡 ${esc(h.x)}</div></div>`).join("")}</div>`:""}
+<button class="btn" onclick="location.reload()">🔄 New game</button>`}
+refresh()}
+function refresh(){const L=calc();
+if(scr==="lobby"&&$("#pl")){$("#pl").innerHTML=L.length?L.map(p=>`<span class="pl">${p.av} ${esc(p.n)}</span>`).join(""):'<div class="sub">Waiting for players…</div>';if(isHost)$("#st").disabled=!L.length}
+if(scr==="play"||scr==="wait"){const f=$("#fd");if(f&&(scr==="wait"||!locked||true)&&!f.dataset.hold)f.innerHTML=feedHtml();const l=$("#lb");if(l)l.innerHTML=lbHtml(14);
+const m=L.find(x=>x.id===me.id);if(m&&!isHost){$("#msc").textContent=m.sc;$("#mhk").textContent=m.hl;$("#msh").textContent=m.sl;if($("#rk"))$("#rk").textContent="#"+(L.indexOf(m)+1)}
+const w=$("#ol");if(w&&scr==="wait"){w.innerHTML=lbHtml(50,true);bindHk()}const o=$("#ovl");if(o)o.querySelector("#ol2").innerHTML=lbHtml(50,true),bindHk()}}
+function openLB(h){closeLB();const d=document.createElement("div");d.className="ov";d.id="ovl";d.innerHTML=`<h1>${h?"🔓 Pick your victim":"🏆 Leaderboard"}</h1><div class="sub">${h?"You steal 25% of their score — a 🛡 blocks the hack":""}</div><div id="ol2"></div><button class="btn alt" style="margin-top:12px" id="cl">Back to battle</button>`;document.body.appendChild(d);$("#cl").onclick=closeLB;refresh()}
+function closeLB(){const o=$("#ovl");if(o)o.remove()}
+function bindHk(){document.querySelectorAll("[data-h]").forEach(b=>b.onclick=()=>doHack(b.dataset.h))}
+function flash(t,c){const d=document.createElement("div");d.className="fl "+c;d.innerHTML=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2300);if(c==="r"){try{navigator.vibrate&&navigator.vibrate([150,60,150])}catch(e){}document.body.classList.add("shake");setTimeout(()=>document.body.classList.remove("shake"),420)}}
+// ===== networking =====
+const pd=()=>({n:me.n,av:me.av,pts:me.pts,st:me.st,hk:me.hk,sh:me.sh,qi:me.qi,dn:me.dn});
+function broadcast(){const m={t:"s",room,players,hacks,now:Date.now()};conns.forEach(c=>{try{c.open&&c.send(m)}catch(e){}});applyS(m);
+if(isHost&&room.status==="playing"&&!wTimer){const L=Object.values(players);if(L.length&&L.every(p=>p.dn)){wTimer=setTimeout(()=>hostSet({status:"ended"}),4000)}}}
+function hostSet(o){room={...room,...o};broadcast()}
+function applyS(m){off=m.now?m.now-Date.now():0;room=m.room||room;players=m.players||{};const nh=m.hacks||[];
+nh.forEach(h=>{const k=h.t+h.from;if(!seenH.has(k)){seenH.add(k);if(synced&&h.to===me.id)flash(h.blk?"🛡 Hack blocked!<br>"+esc(h.fn):"☠ YOU GOT HACKED!<br>−"+h.amt+" to "+esc(h.fn),h.blk?"g":"r")}});synced=true;hacks=nh;
+if(room.status==="playing"&&scr==="lobby"){if(isHost){scr="play";render();startTick()}else startPlay()}
+if(room.status==="ended"&&scr!=="end"&&scr!=="home")finish();refresh()}
+async function doHack(tid){const L=calc(),m=L.find(x=>x.id===me.id),t=L.find(x=>x.id===tid);if(!m||!t||m.hl<=0)return;if(t.sc<=0)return flash("Their score is zero! Pick someone else","y");
+const blk=t.sl>0,amt=blk?0:Math.min(t.sc,Math.max(30,Math.floor(t.sc*.25))),h={from:me.id,to:tid,fn:me.n,tn:t.n,amt,blk,t:Date.now()};closeLB();
+if(conn&&conn.open){conn.send({t:"h",h});hacks.push(h);seenH.add(h.t+h.from);refresh();flash(blk?"🛡 Target had a shield!<br>Hack wasted":"🔓 HACK SUCCESS!<br>+"+amt+" pts 😈",blk?"y":"g")}else flash("Connection lost","y")}
+function seterr(m){const e=$("#er");if(e)e.textContent=m}
+function join(){me.n=$("#nm").value.trim();code=$("#cd").value.trim();if(!me.n)return seterr("Enter your name");if(code.length!==4)return seterr("Room code is 4 digits");
+try{localStorage.setItem("fa_name",me.n)}catch(e){}
+seterr("Connecting…");let ok=false;peer=new Peer();
+peer.on("open",()=>{conn=peer.connect(HP+code,{reliable:true});const to=setTimeout(()=>{if(!ok){seterr("Wrong code, or the teacher has not opened the room ❌");try{peer.destroy()}catch(e){}}},10000);
+conn.on("open",()=>{ok=true;clearTimeout(to);conn.send({t:"p",id:me.id,d:pd()});scr="lobby";render()});
+conn.on("data",d=>{if(d.t==="s")applyS(d)});
+conn.on("close",()=>{if(scr!=="end")flash("Connection to the teacher lost ⚠️<br>Refresh the page","y")})});
+peer.on("error",e=>{if(!ok)seterr("Connection problem ("+e.type+")")})}
+function host(){code=String(1000+Math.random()*9000|0);isHost=true;room={status:"lobby"};peer=new Peer(HP+code);
+peer.on("open",()=>{scr="lobby";render()});
+peer.on("error",e=>{if(e.type==="unavailable-id")host();else{isHost=false;seterr("Connection problem ("+e.type+")")}});
+peer.on("connection",c=>{conns.push(c);c.on("open",()=>c.send({t:"s",room,players,hacks,now:Date.now()}));
+c.on("data",d=>{if(d.t==="p")players[d.id]=d.d;else if(d.t==="h")hacks.push(d.h);broadcast()});c.on("close",()=>{conns=conns.filter(x=>x!==c)})})}
+function save(){if(!isHost&&conn&&conn.open)conn.send({t:"p",id:me.id,d:pd()})}
+// ===== game =====
+let order=[];
+function startPlay(){order=[...MC.map((_,i)=>({t:"m",i})),...ES.map((_,i)=>({t:"e",i}))];me.qi=0;lastLvl=0;scr="play";render();startTick();nextQ()}
+function startTick(){clearInterval(ticker);ticker=setInterval(()=>{const left=(room.endAt||0)-N(),c=$("#clk");if(c){const s=Math.max(0,left/1000|0);c.textContent=`⏱ ${s/60|0}:${String(s%60).padStart(2,"0")}`}
+if(room.endAt&&left<=0&&(scr==="play"||scr==="wait")){if(isHost)hostSet({status:"ended"});else finish();return}
+if(!isHost&&cur&&!locked&&scr==="play"){const lim=cur.q.t==="e"?ET:QT,r=lim-(Date.now()-t0)/1000;$("#tb")&&($("#tb").style.width=Math.max(0,r/lim*100)+"%");if(r<=0)cur.q.t==="e"?submitEssay():answer(-1)}},100)}
+function nextQ(){if(scr!=="play"||isHost)return;if(N()>=room.endAt)return finish();
+if(me.qi>=TOTAL){me.dn=1;save();scr="wait";clearInterval(ticker);ticker=setInterval(()=>{if(room.endAt&&N()>=room.endAt&&!isHost)finish()},500);render();return}
+const q=order[me.qi],lv=lvOf(me.qi);cur={q,perm:q.t==="m"?shuf([0,1,2,3]):null};locked=false;$("#lv").textContent="LEVEL "+Math.min(lv,3)+(lv===4?" • BOSS":" • "+LV[lv]);$("#pg").textContent="Q"+(me.qi+1)+"/"+TOTAL;$("#fd").dataset.hold="";$("#fd").innerHTML=feedHtml();
+const draw=()=>{t0=Date.now();if(q.t==="m"){const d=MC[q.i];$("#qa").innerHTML=`<div class="q">${esc(d[0])}</div>`+cur.perm.map(i=>`<button class="ans" data-i="${i}">${esc(d[1][i])}</button>`).join("");document.querySelectorAll(".ans").forEach(b=>b.onclick=()=>answer(+b.dataset.i))}
+else{const d=ES[q.i];$("#qa").innerHTML=`<div class="tag">👑 BOSS ESSAY ${q.i+1}/2 • up to ${EMAX} pts</div><div class="q">${esc(d[0])}</div><textarea id="es" placeholder="Write your answer in English… mention the key ideas!"></textarea><button class="btn" id="sb">Submit answer ⚔️</button>`;$("#sb").onclick=submitEssay}};
+if(lv!==lastLvl){lastLvl=lv;locked=true;$("#qa").innerHTML=`<h1 style="font-size:30px">${lv===4?"BOSS FIGHT":"LEVEL "+lv}</h1><div class="sub">${lv===4?"Two essays. Big points. 👑":LV[lv]+" 🔥"}</div>`;$("#tb").style.width="100%";setTimeout(()=>{locked=false;draw()},1400)}else draw()}
+function answer(i){if(locked||!cur)return;locked=true;const d=MC[cur.q.i],ok=i===d[2],left=Math.max(0,QT-(Date.now()-t0)/1000);
+document.querySelectorAll(".ans").forEach(b=>{if(+b.dataset.i===d[2])b.classList.add("ok");else if(+b.dataset.i===i)b.classList.add("bad");b.disabled=true});
+const f=$("#fd");f.dataset.hold="1";
+if(ok){const g=Math.round(100+50*left/QT);me.pts+=g;me.st++;let m="+"+g;if(me.st%3===0){me.hk++;m+=" 🔓 +Hack!"}if(me.st%4===0){me.sh++;m+=" 🛡 +Shield!"}if(me.st>=2)m+=" 🔥x"+me.st;f.innerHTML=`<div class="tag" style="font-size:20px">${m}</div><div class="ex">💡 ${esc(d[3])}</div>`}
+else{me.st=0;f.innerHTML=`<div style="color:var(--r);font-size:18px">${i<0?"Time is up ⏱":"Wrong ❌"} — streak reset</div><div class="ex">💡 ${esc(d[3])}</div>`}
+hist.push({q:d[0],ok,c:d[1][d[2]],x:d[3]});me.qi++;save();setTimeout(nextQ,ok?1500:2600)}
+function submitEssay(){if(locked||!cur||cur.q.t!=="e")return;locked=true;const d=ES[cur.q.i],txt=($("#es")||{value:""}).value,h=d[1].map(k=>[k[0],new RegExp(k[1],"i").test(txt)]),f=h.filter(x=>x[1]).length,sc=Math.round(EMAX*f/h.length);
+me.pts+=sc;let bonus="";if(cur.q.i===0){me.hk++;bonus=" 🔓 +Hack unlocked!"}me.qi++;hist.push({e:1,q:d[0],m:d[2]});save();
+$("#tb").style.width="0%";$("#qa").innerHTML=`<div class="tag" style="font-size:22px">+${sc} pts${bonus}</div><div class="sub" style="margin:6px 0">Key ideas found: ${f}/${h.length}</div><div>${h.map(x=>`<span class="kw ${x[1]?"y":"n"}">${x[1]?"✓":"✗"} ${esc(x[0])}</span>`).join("")}</div><div class="mdl"><b>Model answer</b>\n${esc(d[2])}</div><button class="btn" id="nx" style="margin-top:12px">${me.qi>=TOTAL?"Finish 🏁":"Next ➜"}</button>`;$("#nx").onclick=()=>{locked=false;nextQ()};locked=true}
+function finish(){clearInterval(ticker);clearTimeout(wTimer);closeLB();scr="end";render();if(typeof confetti==="function"){}}
+render();
+</script></body></html>
